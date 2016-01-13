@@ -1,4 +1,4 @@
-# Pre-work - *Simple Todo App*
+# Pre-work - **Simple Todo**
 
 **Simple Todo** is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
 
@@ -29,13 +29,11 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough 
 
-Here's a walkthrough of implemented user stories:
-
-<img src='http://i.imgur.com/L64eNMt.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+Here's a walkthrough of implemented user stories: [Video walkthrough](http://i.imgur.com/L64eNMt.gifv)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-1) Understanding Intent and its usage
-2) Overall working with the Android Studio
+* Understanding Intent and its usage
+* Overall working with the Android Studio
