@@ -8,18 +8,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayAdapter arrayAdapter;
     ArrayList<String> listViewContent;
+    ItemsDatabaseHelper dbHelper;
 
     int currentItemPosition = -1;
     private final int REQUEST_CODE = 20;
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.itemList);
 
-        readItems();
+        readDBItems();
 
         if(arrayAdapter == null) {
             arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listViewContent);
@@ -63,9 +60,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String itemLabel = listViewContent.get(position);
                 listViewContent.remove(position);
-                writeItems();
                 arrayAdapter.notifyDataSetChanged();
+                dbHelper.deleteItem(itemLabel);
                 return true;
             }
         });
@@ -77,11 +75,12 @@ public class MainActivity extends AppCompatActivity {
         String itemText = editText.getText().toString();
 
         if(!itemText.isEmpty()){
-            listViewContent.add(editText.getText().toString());
+            listViewContent.add(itemText);
             editText.setText("");
             editText.setHint("Add a new item");
-            writeItems();
             arrayAdapter.notifyDataSetChanged();
+            Item dbItem = new Item(itemText, itemText, "high", "started");
+            dbHelper.addItem(dbItem);
         }
     }
 
@@ -90,32 +89,23 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             String newItem = data.getExtras().getString("newText");
+            String oldLabel = listViewContent.get(currentItemPosition);
             listViewContent.set(currentItemPosition, newItem);
-            writeItems();
             arrayAdapter.notifyDataSetChanged();
+            Item dbItem = new Item(newItem, newItem, "low", "started");
+            dbHelper.updateItem(oldLabel, dbItem);
         }
     }
 
-    private void readItems(){
-        File fDir = getFilesDir();
-        File todoFile = new File(fDir, "todo.txt");
+    private void readDBItems(){
+        dbHelper = ItemsDatabaseHelper.getInstance(this);
+        listViewContent = new ArrayList<String>();
+        List<Item> items = dbHelper.getAllItems();
 
-        try{
-            listViewContent = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-            listViewContent = new ArrayList<String>();
-        }
-    }
-
-    private void writeItems(){
-        File fDir = getFilesDir();
-        File todoFile = new File(fDir, "todo.txt");
-
-        try{
-            FileUtils.writeLines(todoFile, listViewContent);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(!items.isEmpty()){
+            for (Item item : items) {
+                listViewContent.add(item.label);
+            }
         }
     }
 
