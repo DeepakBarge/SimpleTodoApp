@@ -27,6 +27,7 @@ public class EditItem extends AppCompatActivity {
         saveText = (EditText) findViewById(R.id.saveText);
 
         saveText.setText(selectedItemText);
+
     }
 
     public void saveItem(View view) {
