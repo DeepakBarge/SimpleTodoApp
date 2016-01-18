@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SimpleTodo</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_addItem">AddItem</string>
+    <string name="action_editItem">EditItem</string>
+    <string name="action_deleteItem">DeleteItem</string>
+    <string name="action_saveItem">SaveItem</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

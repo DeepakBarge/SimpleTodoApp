@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Item {
+class Item implements Serializable{
 
     public int id;
     public String label;
@@ -24,6 +26,7 @@ class Item {
         this.label = label;
         this.priorityLevel = priorityLevel;
         this.status = status;
+        //this.dueDate = dueDate;
     }
 }
 
@@ -127,8 +130,8 @@ public class ItemsDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Get all items in the database
-    public List<Item> getAllItems() {
-        List<Item> items = new ArrayList<>();
+    public ArrayList<Item> getAllItems() {
+        ArrayList<Item> items = new ArrayList<>();
 
         String ITEMS_SELECT_QUERY =
                 String.format("SELECT * FROM %s", TABLE_ITEMS);

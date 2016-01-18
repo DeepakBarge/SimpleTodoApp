@@ -3,42 +3,80 @@ package com.example.deepak.simpletodo;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-    ArrayAdapter arrayAdapter;
-    ArrayList<String> listViewContent;
     ItemsDatabaseHelper dbHelper;
 
-    int currentItemPosition = -1;
+    ArrayList<Item> listViewItems;
+    CustomItemListAdapter customItemListAdapter;
+
+    int currentItemPosition = 0;
     private final int REQUEST_CODE = 20;
+    private final int REQUEST_CODE1 = 21;
+    private final int REQUEST_CODE2 = 22;
+
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.tool_bar); // Attaching the layout to the toolbar object
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.ic_appicon);
+        getSupportActionBar().setTitle("Listly");
+
         listView = (ListView) findViewById(R.id.itemList);
 
         readDBItems();
 
-        if(arrayAdapter == null) {
-            arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listViewContent);
+        if(customItemListAdapter == null){
+            customItemListAdapter = new CustomItemListAdapter(this, listViewItems);
         }
 
-        listView.setAdapter(arrayAdapter);
+        listView.setAdapter(customItemListAdapter);
 
         setupItemClickListener();
 
         setupItemLongClickListener();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_add:
+
+                Intent i = new Intent(getApplicationContext(), NewItem.class);
+                Item newItem = new Item("", "", "", "");
+                i.putExtra("operation","add");
+                i.putExtra("newItem", newItem);
+                startActivityForResult(i, REQUEST_CODE2);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void setupItemClickListener(){
@@ -47,9 +85,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentItemPosition = position;
-                Intent i = new Intent(getApplicationContext(), EditItem.class);
-                i.putExtra("currentText", listViewContent.get(position));
-                startActivityForResult(i, REQUEST_CODE);
+
+                Intent i = new Intent(getApplicationContext(), ItemDetails.class);
+
+                Item temp = new Item(listViewItems.get(position).label,
+                        listViewItems.get(position).notes,
+                        listViewItems.get(position).priorityLevel,
+                        listViewItems.get(position).status);
+                i.putExtra("item", temp);
+                startActivityForResult(i, REQUEST_CODE1);
             }
         });
 
@@ -60,53 +104,51 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String itemLabel = listViewContent.get(position);
-                listViewContent.remove(position);
-                arrayAdapter.notifyDataSetChanged();
+                String itemLabel = listViewItems.get(position).label;
+                listViewItems.remove(position);
+                customItemListAdapter.notifyDataSetChanged();
                 dbHelper.deleteItem(itemLabel);
                 return true;
             }
         });
     }
 
-    public void addItem(View view) {
-
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String itemText = editText.getText().toString();
-
-        if(!itemText.isEmpty()){
-            listViewContent.add(itemText);
-            editText.setText("");
-            editText.setHint("Add a new item");
-            arrayAdapter.notifyDataSetChanged();
-            Item dbItem = new Item(itemText, itemText, "high", "started");
-            dbHelper.addItem(dbItem);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            String newItem = data.getExtras().getString("newText");
-            String oldLabel = listViewContent.get(currentItemPosition);
-            listViewContent.set(currentItemPosition, newItem);
-            arrayAdapter.notifyDataSetChanged();
-            Item dbItem = new Item(newItem, newItem, "low", "started");
-            dbHelper.updateItem(oldLabel, dbItem);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE1){
+            Item newItem = (Item) data.getSerializableExtra("newItem");
+            if(data.getStringExtra("operation").equalsIgnoreCase("update")){
+                String oldLabel = listViewItems.get(currentItemPosition).label;
+                listViewItems.set(currentItemPosition, newItem);
+                customItemListAdapter.notifyDataSetChanged();
+                dbHelper.updateItem(oldLabel, newItem);
+            }
+            if(data.getStringExtra("operation").equalsIgnoreCase("delete")){
+                String itemLabel = listViewItems.get(currentItemPosition).label;
+                listViewItems.remove(currentItemPosition);
+                customItemListAdapter.notifyDataSetChanged();
+                dbHelper.deleteItem(itemLabel);
+            }
+        } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE2) {
+
+            Item newItem = (Item) data.getSerializableExtra("newItem");
+            if (data.getStringExtra("operation").equalsIgnoreCase("save")) {
+
+                if(!newItem.label.isEmpty()){
+                    listViewItems.add(newItem);
+                    customItemListAdapter.notifyDataSetChanged();
+                    dbHelper.addItem(newItem);
+                }
+
+            }
         }
     }
 
     private void readDBItems(){
-        dbHelper = ItemsDatabaseHelper.getInstance(this);
-        listViewContent = new ArrayList<String>();
-        List<Item> items = dbHelper.getAllItems();
 
-        if(!items.isEmpty()){
-            for (Item item : items) {
-                listViewContent.add(item.label);
-            }
-        }
+        dbHelper = ItemsDatabaseHelper.getInstance(this);
+        listViewItems = dbHelper.getAllItems();
     }
 
 }

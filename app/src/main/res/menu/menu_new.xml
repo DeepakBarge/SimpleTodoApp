@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.deepak.simpletodo.NewItem">
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="200"
+        android:title="@string/action_saveItem"
+        android:icon="@drawable/ic_saveitem"
+        app:showAsAction="ifRoom">
+    </item>
+    <item
+        android:id="@+id/action_cancel"
+        android:orderInCategory="300"
+        android:title="@string/action_cancel"
+        android:icon="@drawable/ic_cancel"
+        app:showAsAction="ifRoom">
+    </item>
+
+</menu>
