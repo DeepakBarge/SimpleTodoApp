@@ -1,4 +1,4 @@
-package com.example.deepak.simpletodo;
+package com.example.deepak.simpletodo.fragments;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.DatePicker;
 import android.app.Dialog;
+
+import com.example.deepak.simpletodo.R;
+
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {

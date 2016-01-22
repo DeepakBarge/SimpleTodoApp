@@ -1,18 +1,19 @@
-package com.example.deepak.simpletodo;
+package com.example.deepak.simpletodo.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.app.AlertDialog;
+import com.example.deepak.simpletodo.R;
+import com.example.deepak.simpletodo.utils.Item;
 
-public class ItemDetails extends AppCompatActivity {
+public class ItemDetailsActivity extends AppCompatActivity {
 
     TextView taskLabelText, dueDateText, statusText, priorityLevelText, notesText;
 
@@ -82,7 +83,7 @@ public class ItemDetails extends AppCompatActivity {
 
             case R.id.action_edit:
 
-                Intent i = new Intent(getApplicationContext(), NewItem.class);
+                Intent i = new Intent(getApplicationContext(), NewOrEditItemActivity.class);
 
                 Item editItem = new Item(taskLabelText.getText().toString(),
                         notesText.getText().toString(),
