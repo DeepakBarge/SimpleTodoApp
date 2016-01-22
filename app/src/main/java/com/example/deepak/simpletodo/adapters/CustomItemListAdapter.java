@@ -1,4 +1,4 @@
-package com.example.deepak.simpletodo;
+package com.example.deepak.simpletodo.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import com.example.deepak.simpletodo.utils.Item;
+import com.example.deepak.simpletodo.R;
 
 import java.util.ArrayList;
 

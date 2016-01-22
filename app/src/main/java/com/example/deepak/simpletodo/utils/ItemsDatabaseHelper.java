@@ -1,34 +1,11 @@
-package com.example.deepak.simpletodo;
+package com.example.deepak.simpletodo.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-
-class Item implements Serializable{
-
-    public int id;
-    public String label;
-    public String notes;
-    public String priorityLevel;
-    public String dueDate;
-    public String status;
-
-    public Item(){}
-
-    public Item(String label, String notes, String priorityLevel, String status){
-        this.notes = notes;
-        this.label = label;
-        this.priorityLevel = priorityLevel;
-        this.status = status;
-        //this.dueDate = dueDate;
-    }
-}
 
 public class ItemsDatabaseHelper extends SQLiteOpenHelper {
 

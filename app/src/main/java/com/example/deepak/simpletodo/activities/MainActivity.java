@@ -1,15 +1,19 @@
-package com.example.deepak.simpletodo;
+package com.example.deepak.simpletodo.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
+import com.example.deepak.simpletodo.adapters.CustomItemListAdapter;
+import com.example.deepak.simpletodo.utils.Item;
+import com.example.deepak.simpletodo.utils.ItemsDatabaseHelper;
+import com.example.deepak.simpletodo.R;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_add:
 
-                Intent i = new Intent(getApplicationContext(), NewItem.class);
+                Intent i = new Intent(getApplicationContext(), NewOrEditItemActivity.class);
                 Item newItem = new Item("", "", "", "");
                 i.putExtra("operation","add");
                 i.putExtra("newItem", newItem);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentItemPosition = position;
 
-                Intent i = new Intent(getApplicationContext(), ItemDetails.class);
+                Intent i = new Intent(getApplicationContext(), ItemDetailsActivity.class);
 
                 Item temp = new Item(listViewItems.get(position).label,
                         listViewItems.get(position).notes,
