@@ -36,12 +36,12 @@ public class NewOrEditItemActivity extends AppCompatActivity {
 
         priorityDropdown = (Spinner)findViewById(R.id.spinner1);
         pItems = new String[]{"Low", "Medium", "High"};
-        ArrayAdapter<String> pAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, pItems);
+        ArrayAdapter<String> pAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pItems);
         priorityDropdown.setAdapter(pAdapter);
 
         statusDropdown = (Spinner)findViewById(R.id.spinner2);
         sItems = new String[]{"Started", "Not Started", "In Progress", "Done"};
-        ArrayAdapter<String> sAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, sItems);
+        ArrayAdapter<String> sAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sItems);
         statusDropdown.setAdapter(sAdapter);
 
         taskText = (EditText)findViewById(R.id.taskText);
